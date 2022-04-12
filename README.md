@@ -51,4 +51,13 @@ This is around a 11x performance speedup.
 
 ### Graph
 
+Please note that the two most left results represent the default GraphQL Java behaviour.
+
+Setting method references would entail setting the following for every data fetcher manually! Compare this to just
+setting the AsmDataFetcherFactory.
+
+```java
+PropertyDataFetcher.fetching(MyDomainObject::getId);
+```
+
 ![](./.gihtub/benchmark-graph.png)
