@@ -1,5 +1,6 @@
 package nl.jrdie.graphql.asm;
 
+import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.DataFetchingEnvironmentImpl;
 import graphql.schema.PropertyDataFetcher;
@@ -37,6 +38,20 @@ public class AsmVsPropertyBenchmark {
   @Benchmark
   @BenchmarkMode(Mode.Throughput)
   @OutputTimeUnit(TimeUnit.SECONDS)
+  public void benchMarkThroughputInDirectClassHierarchyMethodRef(Blackhole blackhole) {
+    executeTestMethodReference(blackhole, dfeFoo);
+  }
+
+  @Benchmark
+  @BenchmarkMode(Mode.Throughput)
+  @OutputTimeUnit(TimeUnit.SECONDS)
+  public void benchMarkThroughputDirectClassHierarchyMethodRef(Blackhole blackhole) {
+    executeTestMethodReference(blackhole, dfeBar);
+  }
+
+  @Benchmark
+  @BenchmarkMode(Mode.Throughput)
+  @OutputTimeUnit(TimeUnit.SECONDS)
   public void benchMarkThroughputInDirectClassHierarchyAsm(Blackhole blackhole) {
     executeTestAsm(blackhole, dfeFoo);
   }
@@ -48,8 +63,38 @@ public class AsmVsPropertyBenchmark {
     executeTestAsm(blackhole, dfeBar);
   }
 
+  @Benchmark
+  @BenchmarkMode(Mode.Throughput)
+  @OutputTimeUnit(TimeUnit.SECONDS)
+  public void benchMarkThroughputDirectMethod(Blackhole blackhole) throws Exception {
+    executeTestDirectMethod(blackhole, dfeBar);
+  }
+
+  @Benchmark
+  @BenchmarkMode(Mode.Throughput)
+  @OutputTimeUnit(TimeUnit.SECONDS)
+  public void benchMarkThroughputDirectField(Blackhole blackhole) throws Exception {
+    executeTestDirectField(blackhole, dfeBar);
+  }
+
   static PropertyDataFetcher<Object> nameFetcher = PropertyDataFetcher.fetching("name");
+  static PropertyDataFetcher<Object> nameFetcherMethodReference =
+      PropertyDataFetcher.fetching(Bar::getName);
   static AsmDataFetcher<Object> nameAsmFetcher = AsmDataFetcher.fetching("name");
+  static DataFetcher<Object> directBarFetcherMethod =
+      a -> {
+        if (a == null) {
+          return null;
+        }
+        return ((Bar) a.getSource()).getName();
+      };
+  static DataFetcher<Object> directBarFetcherField =
+      a -> {
+        if (a == null) {
+          return null;
+        }
+        return ((Bar) a.getSource()).name;
+      };
 
   static DataFetchingEnvironment dfeFoo =
       DataFetchingEnvironmentImpl.newDataFetchingEnvironment().source(new Foo("brad")).build();
@@ -60,8 +105,22 @@ public class AsmVsPropertyBenchmark {
     blackhole.consume(nameFetcher.get(dfe));
   }
 
+  public static void executeTestMethodReference(Blackhole blackhole, DataFetchingEnvironment dfe) {
+    blackhole.consume(nameFetcherMethodReference.get(dfe));
+  }
+
   public static void executeTestAsm(Blackhole blackhole, DataFetchingEnvironment dfe) {
     blackhole.consume(nameAsmFetcher.get(dfe));
+  }
+
+  public static void executeTestDirectMethod(Blackhole blackhole, DataFetchingEnvironment dfe)
+      throws Exception {
+    blackhole.consume(directBarFetcherMethod.get(dfe));
+  }
+
+  public static void executeTestDirectField(Blackhole blackhole, DataFetchingEnvironment dfe)
+      throws Exception {
+    blackhole.consume(directBarFetcherField.get(dfe));
   }
 
   public static class Foo extends Bar {

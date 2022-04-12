@@ -36,11 +36,19 @@ RuntimeWiring rtw =
 Preliminary benchmarks:
 
 ```
-Benchmark                                                             Mode  Cnt         Score         Error  Units
-AsmVsPropertyBenchmark.benchMarkThroughputDirectClassHierarchy       thrpt   15   6642515,159 ±  187660,195  ops/s
-AsmVsPropertyBenchmark.benchMarkThroughputDirectClassHierarchyAsm    thrpt   15  77054169,782 ±  566113,042  ops/s
-AsmVsPropertyBenchmark.benchMarkThroughputInDirectClassHierarchy     thrpt   15   6685492,720 ±   11685,971  ops/s
-AsmVsPropertyBenchmark.benchMarkThroughputInDirectClassHierarchyAsm  thrpt   15  73568498,193 ± 5513132,975  ops/s
+Benchmark                                                                   Mode  Cnt         Score        Error  Units
+AsmVsPropertyBenchmark.benchMarkThroughputDirectClassHierarchy             thrpt   15   6764974,315 ±  25020,739  ops/s
+AsmVsPropertyBenchmark.benchMarkThroughputDirectClassHierarchyAsm          thrpt   15  62989543,971 ± 370488,977  ops/s
+AsmVsPropertyBenchmark.benchMarkThroughputDirectClassHierarchyMethodRef    thrpt   15  65991358,560 ± 785710,214  ops/s
+AsmVsPropertyBenchmark.benchMarkThroughputDirectField                      thrpt   15  53087417,650 ± 124443,041  ops/s
+AsmVsPropertyBenchmark.benchMarkThroughputDirectMethod                     thrpt   15  66614331,393 ± 386561,339  ops/s
+AsmVsPropertyBenchmark.benchMarkThroughputInDirectClassHierarchy           thrpt   15   6554555,139 ± 294484,688  ops/s
+AsmVsPropertyBenchmark.benchMarkThroughputInDirectClassHierarchyAsm        thrpt   15  63143139,227 ± 364155,242  ops/s
+AsmVsPropertyBenchmark.benchMarkThroughputInDirectClassHierarchyMethodRef  thrpt   15  66496904,206 ± 202976,405  ops/s
 ```
 
 This is around a 11x performance speedup.
+
+### Graph
+
+![](./.gihtub/benchmark-graph.png)
